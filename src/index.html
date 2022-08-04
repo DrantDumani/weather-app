@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= htmlWebpackPlugin.options.title%></title>
+</head>
+<body>
+    <div class="page-container">
+        <header>
+            <h1 class="page-title">Weather App</h1>
+        </header>
+        <main>
+            <form class="location-form">
+                <input type="search" class="search-input" placeholder="Enter a location" required>
+                <input type="submit" value="Search" class="submit-btn">
+            </form>
+            <span class="search-error-text">Error text</span>
+            <div class="weather-data-container hide">
+                <div class="info-img-container">
+                    <div class="primary-weather-info">
+                        <h2 class="location-name"></h2>
+                        <div class="svg-info-pair weather-desc-container">
+                            <span class="weather-description"></span>
+                        </div>
+                        <span class="temp-display"></span>
+                        <span class="date-display"></span>
+                        <span class="time-display"></span>
+                        <button class="unit-toggle"></button>
+                        <div class="gif-container"></div>
+                    </div>
+                    <div class="secondary-weather-info">
+                        <div class="svg-info-pair humidity-container">
+                            <span class="humidity-display"></span>
+                        </div>
+                        <div class="svg-info-pair wind-speed-container">
+                            <span class="wind-speed-display"></span>
+                        </div>
+                        <div class="svg-info-pair hi-low-temp-container">
+                            <span class="hi-low-temp"></span>
+                        </div>
+                        <div class="svg-info-pair feels-like-temp-container">
+                            <span class="feels-like-temp"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <footer>
+            <span>Created by Darnell</span>
+        </footer>
+    </div>
+</body>
+</html>
