@@ -4,19 +4,6 @@ class ResponseError extends Error {}
 
 const locationForm = document.querySelector('.location-form');
 
-// const queryInfo = (() => {
-//   const units = ['imperial', 'metric'];
-//   let currentUnitIndex = 0;
-//   let currentUnit = units[currentUnitIndex];
-//   const swapUnits = () => {
-//     currentUnitIndex = (currentUnitIndex + 1) % units.length;
-//     currentUnit = units[currentUnitIndex];
-//     console.log(currentUnit);
-//   };
-//   const getCurrentUnit = () => currentUnit;
-//   return { getCurrentUnit, swapUnits };
-// })();
-
 const queryInfo = (() => {
   let locationStr = '';
   const units = ['imperial', 'metric'];
@@ -34,6 +21,55 @@ const queryInfo = (() => {
   };
 })();
 
+function createGifQuery(weatherDesc, temp, windSpeed, unitType) {
+  const searchTerms = [weatherDesc];
+  let upperTempRange;
+  let lowerTempRange;
+  let upperWindRange;
+  let lowerWindRange;
+  if (unitType === 'imperial') {
+    [lowerTempRange, upperTempRange] = [46, 78];
+    [lowerWindRange, upperWindRange] = [20, 25];
+  } else {
+    [lowerTempRange, upperTempRange] = [8, 25];
+    [lowerWindRange, upperWindRange] = [9, 11];
+  }
+  if (Number(temp) > upperTempRange) {
+    searchTerms.push('hot');
+  } else if (Number(temp) < lowerTempRange) {
+    searchTerms.push('cold');
+  }
+  if (Number(windSpeed) > upperWindRange) {
+    searchTerms.push('windy');
+  } else if (Number(windSpeed) > lowerWindRange) {
+    searchTerms.push('breezy');
+  }
+  const term = searchTerms[Math.floor(Math.random() * searchTerms.length)];
+  return term;
+}
+
+async function handleGifFetch(data) {
+  const weatherDesc = data.weather[0].description;
+  const { temp } = data.main;
+  const windSpeed = data.wind.speed;
+  const unitType = queryInfo.getCurrentUnit();
+  const gifQuery = createGifQuery(weatherDesc, temp, windSpeed, unitType);
+  const searchTerm = formatQueryStr(gifQuery);
+  const urlStr = completeGifURL(searchTerm);
+  const gifData = await fetchData(urlStr, 'Failed to fetch gif');
+  const { url } = gifData.data.images.original;
+  createGifImg(url);
+}
+
+function createGifImg(src) {
+  const img = document.querySelector('.weather-gif') || document.createElement('img');
+  img.classList.add('weather-gif');
+  img.alt = 'Weather Visualization';
+  img.src = src;
+  const imgContainer = document.querySelector('.gif-container');
+  imgContainer.append(img);
+}
+
 function grabInputStrFromForm(event) {
   const form = event.target;
   const searchInput = form.querySelector('.search-input');
@@ -45,6 +81,12 @@ function grabInputStrFromForm(event) {
 function formatQueryStr(str) {
   const formattedStr = str.trim().replace(/\s+/, '+');
   return formattedStr;
+}
+
+function completeGifURL(str) {
+  const skeletonURL = 'https://api.giphy.com/v1/gifs/translate?api_key=MMSGcrpyWEenoykFcO33KSmaDpslN6RW&s=';
+  const formattedURL = `${skeletonURL}${str}`;
+  return formattedURL;
 }
 
 function completeWeatherURL(location, unit) {
@@ -69,10 +111,11 @@ function handleFormSubmit(event) {
   const location = queryInfo.getLocationStr();
   const formattedLoc = formatQueryStr(location);
   const url = completeWeatherURL(formattedLoc, queryInfo.getCurrentUnit());
-  fetchData(url).then((json) => {
+  fetchData(url, 'Invalid location entered').then((json) => {
     handleData(json);
-    console.log(json);
-  }).catch(console.log);
+    return json;
+  }).then(handleGifFetch)
+    .catch(console.log);
 }
 
 locationForm.addEventListener('submit', handleFormSubmit);
