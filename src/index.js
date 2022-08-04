@@ -4,17 +4,34 @@ class ResponseError extends Error {}
 
 const locationForm = document.querySelector('.location-form');
 
-const unitTypes = (() => {
+// const queryInfo = (() => {
+//   const units = ['imperial', 'metric'];
+//   let currentUnitIndex = 0;
+//   let currentUnit = units[currentUnitIndex];
+//   const swapUnits = () => {
+//     currentUnitIndex = (currentUnitIndex + 1) % units.length;
+//     currentUnit = units[currentUnitIndex];
+//     console.log(currentUnit);
+//   };
+//   const getCurrentUnit = () => currentUnit;
+//   return { getCurrentUnit, swapUnits };
+// })();
+
+const queryInfo = (() => {
+  let locationStr = '';
   const units = ['imperial', 'metric'];
   let currentUnitIndex = 0;
   let currentUnit = units[currentUnitIndex];
   const swapUnits = () => {
     currentUnitIndex = (currentUnitIndex + 1) % units.length;
     currentUnit = units[currentUnitIndex];
-    console.log(currentUnit);
   };
   const getCurrentUnit = () => currentUnit;
-  return { getCurrentUnit, swapUnits };
+  const setLocationStr = (str) => { locationStr = str; };
+  const getLocationStr = () => locationStr;
+  return {
+    getCurrentUnit, swapUnits, setLocationStr, getLocationStr,
+  };
 })();
 
 function grabInputStrFromForm(event) {
@@ -47,9 +64,11 @@ async function fetchData(url, errStr) {
 
 function handleFormSubmit(event) {
   event.preventDefault();
-  const location = grabInputStrFromForm(event);
+  const str = grabInputStrFromForm(event);
+  queryInfo.setLocationStr(str);
+  const location = queryInfo.getLocationStr();
   const formattedLoc = formatQueryStr(location);
-  const url = completeWeatherURL(formattedLoc, unitTypes.getCurrentUnit());
+  const url = completeWeatherURL(formattedLoc, queryInfo.getCurrentUnit());
   fetchData(url).then((json) => {
     handleData(json);
     console.log(json);
@@ -81,7 +100,7 @@ function fillNodes(dataObj) {
   windSpeedDisplay.innerText = dataObj.windSpeed;
   hiLowTempDisplay.innerText = `${dataObj.lowTemp} | ${dataObj.hiTemp}`;
   feelsLikeTempDisplay.innerText = dataObj.feelsLikeTemp;
-  if (unitTypes.getCurrentUnit() === 'imperial') {
+  if (queryInfo.getCurrentUnit() === 'imperial') {
     unitToggleBtn.innerText = 'Metric units';
   } else {
     unitToggleBtn.innerText = 'Imperial Units';
@@ -110,14 +129,14 @@ function formatTime(dateObj) {
 }
 
 function formatTemp(temp) {
-  const unitSymbol = unitTypes.getCurrentUnit() === 'imperial' ? 'F' : 'C';
+  const unitSymbol = queryInfo.getCurrentUnit() === 'imperial' ? 'F' : 'C';
   return `${Math.round(Number(temp))} \u00B0${unitSymbol}`;
 }
 
 function formatWindSpeed(windSpeed) {
   let unit;
   let fWindSpeed;
-  if (unitTypes.getCurrentUnit() === 'imperial') {
+  if (queryInfo.getCurrentUnit() === 'imperial') {
     fWindSpeed = Math.round(Number(windSpeed));
     unit = 'mph';
   } else {
