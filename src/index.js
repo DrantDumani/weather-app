@@ -24,6 +24,13 @@ async function fetchData(url, errStr) {
   return jsonData;
 }
 
+function handleError(err) {
+  if (err instanceof ResponseError) {
+    const errorText = document.querySelector('.search-error-text');
+    errorText.innerText = err.message;
+  } else throw new Error(err);
+}
+
 function createGifImg(src) {
   const img = document.querySelector('.weather-gif') || document.createElement('img');
   img.classList.add('weather-gif');
@@ -99,7 +106,7 @@ function handleFormSubmit(event) {
     handleData(json);
     return json;
   }).then(handleGifFetch)
-    .catch(console.log);
+    .catch(handleError);
 }
 
 function swapUnitStyle() {
@@ -107,7 +114,8 @@ function swapUnitStyle() {
   const unitType = queryInfo.getCurrentUnit();
   const location = queryInfo.getLocationStr();
   const url = completeWeatherURL(location, unitType);
-  fetchData(url, 'replace this string').then(handleData);
+  fetchData(url, 'Failed to fetch gif').then(handleData)
+    .catch(handleError);
 }
 
 locationForm.addEventListener('submit', handleFormSubmit);
