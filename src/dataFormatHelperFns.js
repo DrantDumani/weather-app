@@ -19,10 +19,10 @@ function formatWindSpeed(windSpeed, unitType) {
   let unit;
   let fWindSpeed;
   if (unitType === 'imperial') {
-    fWindSpeed = Math.round(Number(windSpeed));
+    fWindSpeed = Number(windSpeed).toFixed(1).replace(/\.?0*$/, '');
     unit = 'mph';
   } else {
-    fWindSpeed = Math.round(Number(windSpeed) * 3.6);
+    fWindSpeed = (Number(windSpeed) * 3.6).toFixed(1).replace(/\.?0*$/, '');
     unit = 'km/h';
   }
   return `${fWindSpeed} ${unit}`;
