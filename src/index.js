@@ -102,4 +102,18 @@ function handleFormSubmit(event) {
     .catch(console.log);
 }
 
+function swapUnitStyle() {
+  queryInfo.swapUnits();
+  const unitType = queryInfo.getCurrentUnit();
+  const location = queryInfo.getLocationStr();
+  const url = completeWeatherURL(location, unitType);
+  fetchData(url, 'replace this string').then(handleData);
+}
+
 locationForm.addEventListener('submit', handleFormSubmit);
+
+document.addEventListener('click', (e) => {
+  if (e.target.classList.contains('unit-toggle')) {
+    swapUnitStyle();
+  }
+});
