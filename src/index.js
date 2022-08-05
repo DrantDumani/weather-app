@@ -1,7 +1,7 @@
 import './style.scss';
 import stateManager from './dataStateManager';
 import {
-  formatDate, formatTemp, formatTime, formatWindSpeed,
+  formatDate, formatTemp, formatTime, formatWindSpeed, formatWeatherCond,
 } from './dataFormatHelperFns';
 import completeGifURL from './gifURL';
 import completeWeatherURL from './weatherURL';
@@ -68,6 +68,7 @@ function grabInputStrFromForm(event) {
 
 function formatData(dataObj) {
   const dateObj = getInternationalTime(dataObj.timezone);
+  const weatherDesc = formatWeatherCond(dataObj.weather[0].description);
   const time = formatTime(dateObj);
   const date = formatDate(dateObj);
   const temp = formatTemp(dataObj.main.temp, queryInfo.getCurrentUnit());
@@ -78,8 +79,8 @@ function formatData(dataObj) {
 
   const formattedData = {
     name: dataObj.name,
-    weatherDesc: dataObj.weather[0].description,
     humidity: dataObj.main.humidity,
+    weatherDesc,
     temp,
     time,
     date,

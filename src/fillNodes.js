@@ -17,10 +17,10 @@ function fillNodes(dataObj, unitType) {
   temperatureDisplay.innerText = dataObj.temp;
   dateDisplay.innerText = dataObj.date;
   timeDisplay.innerText = dataObj.time;
-  humidityDisplay.innerText = `${dataObj.humidity}%`;
-  windSpeedDisplay.innerText = dataObj.windSpeed;
-  hiLowTempDisplay.innerText = `${dataObj.lowTemp} | ${dataObj.hiTemp}`;
-  feelsLikeTempDisplay.innerText = dataObj.feelsLikeTemp;
+  humidityDisplay.innerText = `Humidity: ${dataObj.humidity}%`;
+  windSpeedDisplay.innerText = `Wind speed: ${dataObj.windSpeed}`;
+  hiLowTempDisplay.innerText = `Hi: ${dataObj.lowTemp} | Lo: ${dataObj.hiTemp}`;
+  feelsLikeTempDisplay.innerText = `Feels like: ${dataObj.feelsLikeTemp}`;
   if (unitType === 'imperial') {
     unitToggleBtn.innerText = 'Metric units';
   } else {

@@ -28,6 +28,11 @@ function formatWindSpeed(windSpeed, unitType) {
   return `${fWindSpeed} ${unit}`;
 }
 
+function formatWeatherCond(weatherDesc) {
+  let capDesc = weatherDesc.replace(/\b\w/g, (c) => c.toUpperCase());
+  return capDesc;
+}
+
 export {
-  formatDate, formatTemp, formatTime, formatWindSpeed,
+  formatDate, formatTemp, formatTime, formatWindSpeed, formatWeatherCond,
 };
