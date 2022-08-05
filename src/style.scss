@@ -49,6 +49,11 @@ main {
     border-radius: 12px;
 }
 
+.weather-desc-container {
+    display: flex;
+    align-items: center;
+}
+
 $modal-color: #fff;
 .loading-modal {
     display: flex;
