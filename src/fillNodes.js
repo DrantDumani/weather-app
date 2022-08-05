@@ -21,7 +21,7 @@ function fillNodes(dataObj, unitType) {
   timeDisplay.innerText = dataObj.time;
   humidityDisplay.innerText = `Humidity: ${dataObj.humidity}%`;
   windSpeedDisplay.innerText = `Wind speed: ${dataObj.windSpeed}`;
-  hiLowTempDisplay.innerText = `Hi: ${dataObj.lowTemp} | Lo: ${dataObj.hiTemp}`;
+  hiLowTempDisplay.innerText = `Lo: ${dataObj.lowTemp} | Hi: ${dataObj.hiTemp}`;
   feelsLikeTempDisplay.innerText = `Feels like: ${dataObj.feelsLikeTemp}`;
   weatherImg.src = dataObj.iconId;
   weatherImg.classList.remove('hide');
