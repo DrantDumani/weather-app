@@ -12,6 +12,7 @@ function fillNodes(dataObj, unitType) {
   const feelsLikeTempDisplay = document.querySelector('.feels-like-temp');
   const unitToggleBtn = document.querySelector('.unit-toggle');
   const errText = document.querySelector('.search-error-text');
+  const weatherImg = document.querySelector('.weather-svg-icon');
 
   locationDisplay.innerText = dataObj.name;
   weatherDisplay.innerText = dataObj.weatherDesc;
@@ -22,6 +23,8 @@ function fillNodes(dataObj, unitType) {
   windSpeedDisplay.innerText = `Wind speed: ${dataObj.windSpeed}`;
   hiLowTempDisplay.innerText = `Hi: ${dataObj.lowTemp} | Lo: ${dataObj.hiTemp}`;
   feelsLikeTempDisplay.innerText = `Feels like: ${dataObj.feelsLikeTemp}`;
+  weatherImg.src = dataObj.iconId;
+  weatherImg.classList.remove('hide');
   errText.innerText = '';
   if (unitType === 'imperial') {
     unitToggleBtn.innerText = 'Metric units';

@@ -1,7 +1,7 @@
 import './style.scss';
 import stateManager from './dataStateManager';
 import {
-  formatDate, formatTemp, formatTime, formatWindSpeed, formatWeatherCond,
+  formatDate, formatTemp, formatTime, formatWindSpeed, formatWeatherCond, formatIconURL,
 } from './dataFormatHelperFns';
 import completeGifURL from './gifURL';
 import completeWeatherURL from './weatherURL';
@@ -76,11 +76,13 @@ function formatData(dataObj) {
   const hiTemp = formatTemp(dataObj.main.temp_max, queryInfo.getCurrentUnit());
   const lowTemp = formatTemp(dataObj.main.temp_min, queryInfo.getCurrentUnit());
   const windSpeed = formatWindSpeed(dataObj.wind.speed, queryInfo.getCurrentUnit());
+  const iconId = formatIconURL(dataObj.weather[0].icon);
 
   const formattedData = {
     name: dataObj.name,
     humidity: dataObj.main.humidity,
     weatherDesc,
+    iconId,
     temp,
     time,
     date,

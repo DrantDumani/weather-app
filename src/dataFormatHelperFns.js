@@ -33,6 +33,12 @@ function formatWeatherCond(weatherDesc) {
   return capDesc;
 }
 
+function formatIconURL(iconId) {
+  const link = 'http://openweathermap.org/img/wn/10d@2x.png';
+  const url = link.replace(/\d+d/, iconId);
+  return url;
+}
+
 export {
-  formatDate, formatTemp, formatTime, formatWindSpeed, formatWeatherCond,
+  formatDate, formatTemp, formatTime, formatWindSpeed, formatWeatherCond, formatIconURL,
 };
