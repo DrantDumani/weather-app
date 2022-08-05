@@ -9,10 +9,12 @@ import getInternationalTime from './getTime';
 import formatQueryStr from './urlStrFormat';
 import fillNodes from './fillNodes';
 import createGifQuery from './createGifQuery';
+import { handleLoadScreenAnimation, showLoadingScreen, hideLoadingScreen } from './loadScreenHandler';
 
 class ResponseError extends Error {}
 
 const locationForm = document.querySelector('.location-form');
+const loadAnimationHandler = handleLoadScreenAnimation();
 const queryInfo = stateManager();
 
 async function fetchData(url, errStr) {
@@ -99,25 +101,44 @@ function handleData(data) {
   fillNodes(formattedData, queryInfo.getCurrentUnit());
 }
 
+function startLoadingScreen() {
+  showLoadingScreen();
+  loadAnimationHandler.startAnimation();
+}
+
+function stopLoadingScreen() {
+  hideLoadingScreen();
+  loadAnimationHandler.stopAnimation();
+}
+
 function handleFormSubmit(event) {
   event.preventDefault();
   const location = grabInputStrFromForm(event);
   const formattedLoc = formatQueryStr(location);
   queryInfo.setLocationStr(formattedLoc);
   const url = completeWeatherURL(formattedLoc, queryInfo.getCurrentUnit());
+  startLoadingScreen();
   fetchData(url, 'Invalid location entered').then((json) => {
+    stopLoadingScreen();
     handleData(json);
     return json;
   }).then(handleGifFetch)
-    .catch(handleError);
+    .catch((err) => {
+      handleError(err);
+      stopLoadingScreen();
+    });
 }
 
-function swapUnitStyle() {
+function handleBtnClick() {
   queryInfo.swapUnits();
   const unitType = queryInfo.getCurrentUnit();
   const location = queryInfo.getLocationStr();
   const url = completeWeatherURL(location, unitType);
-  fetchData(url, 'Failed to fetch gif').then(handleData)
+  startLoadingScreen();
+  fetchData(url, 'Failed to fetch gif').then((json) => {
+    stopLoadingScreen();
+    handleData(json);
+  })
     .catch(handleError);
 }
 
@@ -125,6 +146,6 @@ locationForm.addEventListener('submit', handleFormSubmit);
 
 document.addEventListener('click', (e) => {
   if (e.target.classList.contains('unit-toggle')) {
-    swapUnitStyle();
+    handleBtnClick();
   }
 });
